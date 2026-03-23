@@ -8,44 +8,54 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1d1d1f;min-height:100vh;}
-.wrap{max-width:720px;margin:0 auto;padding:20px 16px 40px;}
-h1{font-size:20px;font-weight:600;margin-bottom:4px;color:#1d1d1f;}
+.wrap{max-width:740px;margin:0 auto;padding:20px 16px 40px;}
+h1{font-size:20px;font-weight:600;margin-bottom:4px;}
 .subtitle{font-size:13px;color:#888;margin-bottom:20px;}
 .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
 .date-nav{display:flex;align-items:center;gap:8px;}
-.date-nav button{background:#fff;border:1px solid #ddd;border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;color:#1d1d1f;}
+.date-nav button{background:#fff;border:1px solid #ddd;border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;}
 .date-nav button:hover{background:#f0f0f0;}
-#cur-date{font-size:14px;font-weight:500;min-width:180px;text-align:center;color:#1d1d1f;}
+#cur-date{font-size:14px;font-weight:500;min-width:180px;text-align:center;}
 .device-card{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:16px;margin-bottom:12px;}
-.device-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.device-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .device-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
 .device-name-input{font-size:15px;font-weight:600;color:#1d1d1f;background:transparent;border:none;border-bottom:1.5px solid #ddd;outline:none;width:160px;padding:2px 4px;}
 .device-name-input:focus{border-bottom-color:#7F77DD;}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-@media(min-width:500px){.fields{grid-template-columns:1fr 1fr 1fr 1fr;}}
-.field{display:flex;flex-direction:column;gap:5px;}
+.device-total{margin-left:auto;font-size:12px;color:#888;text-align:right;}
+.device-total span{font-weight:600;color:#1d1d1f;font-size:14px;}
+
+.session{background:#f9f9fb;border:1px solid #ebebeb;border-radius:10px;padding:12px;margin-bottom:8px;}
+.session-num{font-size:11px;color:#aaa;font-weight:600;margin-bottom:8px;}
+.session-fields{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;}
+@media(max-width:500px){.session-fields{grid-template-columns:1fr 1fr;}}
+.field{display:flex;flex-direction:column;gap:4px;}
 .field label{font-size:11px;color:#888;font-weight:500;}
-.field input{font-size:13px;padding:7px 9px;border:1px solid #ddd;border-radius:8px;background:#fafafa;color:#1d1d1f;width:100%;}
-.field input:focus{outline:none;border-color:#7F77DD;background:#fff;}
-.calc-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
-.stat-pill{background:#f5f5f7;border-radius:8px;padding:6px 12px;font-size:12px;color:#888;}
+.field input{font-size:13px;padding:6px 8px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1d1d1f;width:100%;}
+.field input:focus{outline:none;border-color:#7F77DD;}
+.session-calc{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center;}
+.stat-pill{background:#fff;border:1px solid #ebebeb;border-radius:7px;padding:4px 10px;font-size:12px;color:#888;}
 .stat-pill span{font-weight:600;color:#1d1d1f;}
+.del-btn{margin-left:auto;background:none;border:none;color:#ccc;font-size:16px;cursor:pointer;padding:2px 6px;border-radius:6px;}
+.del-btn:hover{color:#E24B4A;background:#fff0f0;}
+.add-session-btn{width:100%;background:#f5f5f7;border:1.5px dashed #ddd;border-radius:10px;padding:9px;font-size:13px;color:#888;cursor:pointer;margin-top:4px;}
+.add-session-btn:hover{background:#eeeef2;color:#7F77DD;border-color:#7F77DD;}
+
 .actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
 .btn{background:#fff;border:1px solid #ddd;border-radius:10px;padding:8px 18px;font-size:13px;cursor:pointer;color:#1d1d1f;font-weight:500;}
 .btn:hover{background:#f0f0f0;}
 .btn-primary{background:#7F77DD;color:#fff;border-color:#7F77DD;}
 .btn-primary:hover{background:#6a62c4;}
 .section{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:16px;margin-top:16px;}
-.section h3{font-size:13px;font-weight:600;color:#888;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+.section h3{font-size:12px;font-weight:600;color:#888;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
 .sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .sum-card{background:#f5f5f7;border-radius:10px;padding:12px;text-align:center;}
 .sum-card .name{font-size:11px;font-weight:600;margin-bottom:6px;}
-.sum-card .val{font-size:20px;font-weight:700;color:#1d1d1f;}
+.sum-card .val{font-size:20px;font-weight:700;}
 .sum-card .sub{font-size:11px;color:#888;margin-top:2px;}
-.sum-card .val2{font-size:15px;font-weight:600;margin-top:6px;color:#1d1d1f;}
+.sum-card .val2{font-size:15px;font-weight:600;margin-top:6px;}
 table{width:100%;border-collapse:collapse;font-size:12px;}
 th{background:#f5f5f7;color:#888;padding:7px 6px;text-align:center;border-bottom:1px solid #e5e5e5;font-weight:600;}
-td{padding:7px 6px;text-align:center;border-bottom:1px solid #f0f0f0;color:#1d1d1f;}
+td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0;color:#1d1d1f;}
 tr:last-child td{border-bottom:none;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1d1d1f;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999;}
 .toast.show{opacity:1;}
@@ -54,7 +64,7 @@ tr:last-child td{border-bottom:none;}
 <body>
 <div class="wrap">
   <h1>건강보조기기 착용 기록</h1>
-  <p class="subtitle">착용 시간과 배터리를 기록하고 패턴을 확인하세요</p>
+  <p class="subtitle">하루에 여러 번 착용해도 세션별로 기록할 수 있어요</p>
 
   <div class="top-bar">
     <div class="date-nav">
@@ -72,7 +82,7 @@ tr:last-child td{border-bottom:none;}
   </div>
 
   <div class="section">
-    <h3>전체 요약</h3>
+    <h3>전체 요약 (누적)</h3>
     <div class="sum-grid" id="sum-grid"></div>
   </div>
 
@@ -89,11 +99,12 @@ tr:last-child td{border-bottom:none;}
 const COLORS=['#7F77DD','#1D9E75','#D85A30'];
 const DC=3;
 let currentDate=new Date();
-let records=JSON.parse(localStorage.getItem('htracker')||'{}');
-let deviceNames=JSON.parse(localStorage.getItem('htnames')||'["기기 1","기기 2","기기 3"]');
+let records=JSON.parse(localStorage.getItem('htracker2')||'{}');
+let deviceNames=JSON.parse(localStorage.getItem('htnames2')||'["기기 1","기기 2","기기 3"]');
 
 function dateKey(d){return d.toISOString().slice(0,10);}
 function formatDate(d){return d.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'});}
+
 function calcHours(s,e){
   if(!s||!e)return null;
   const[sh,sm]=s.split(':').map(Number);
@@ -102,69 +113,161 @@ function calcHours(s,e){
   if(m<0)m+=1440;
   return+(m/60).toFixed(2);
 }
+
 function showToast(msg){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
+  t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function getDeviceSessions(key,i){
+  return (records[key]&&records[key][i]&&records[key][i].sessions)||[{}];
+}
+
+function totalHours(sessions){
+  let total=0;
+  sessions.forEach(s=>{const h=calcHours(s.start,s.end);if(h)total+=h;});
+  return total>0?+total.toFixed(2):null;
+}
+
+function totalDischarge(sessions){
+  let total=0,count=0;
+  sessions.forEach(s=>{
+    if(s.bs!==undefined&&s.be!==undefined&&s.bs!==''&&s.be!==''){
+      total+=(+s.bs-+s.be);count++;
+    }
+  });
+  return count>0?+total.toFixed(1):null;
 }
 
 function renderDevices(){
   const key=dateKey(currentDate);
-  const rec=records[key]||{};
   document.getElementById('cur-date').textContent=formatDate(currentDate);
   const wrap=document.getElementById('devices-wrap');
   wrap.innerHTML='';
+
   for(let i=0;i<DC;i++){
-    const d=rec[i]||{};
-    const hours=calcHours(d.start,d.end);
-    const dr=(d.bs!==undefined&&d.be!==undefined&&d.bs!==''&&d.be!=='')?+(d.bs-d.be).toFixed(1):null;
+    const sessions=getDeviceSessions(key,i);
+    const totH=totalHours(sessions);
+    const totDr=totalDischarge(sessions);
+
     const card=document.createElement('div');
     card.className='device-card';
+
+    let sessionsHTML=sessions.map((s,si)=>renderSessionHTML(i,si,s)).join('');
+
     card.innerHTML=`
       <div class="device-header">
         <div class="device-dot" style="background:${COLORS[i]}"></div>
-        <input class="device-name-input" id="dn-${i}" value="${deviceNames[i]}" placeholder="기기 이름" onchange="deviceNames[${i}]=this.value;saveNames();renderSummary();renderHistory();">
+        <input class="device-name-input" id="dn-${i}" value="${deviceNames[i]}" placeholder="기기 이름"
+          onchange="deviceNames[${i}]=this.value;saveNames();renderSummary();renderHistory();">
+        <div class="device-total">
+          총 착용 <span id="tot-h-${i}">${totH!==null?totH+'h':'--'}</span>
+          &nbsp;·&nbsp; 총 방전 <span id="tot-dr-${i}">${totDr!==null?totDr+'%':'--'}</span>
+        </div>
       </div>
-      <div class="fields">
-        <div class="field"><label>착용 시작</label><input type="time" id="s-${i}" value="${d.start||''}" oninput="updateCalc(${i})"></div>
-        <div class="field"><label>착용 종료</label><input type="time" id="e-${i}" value="${d.end||''}" oninput="updateCalc(${i})"></div>
-        <div class="field"><label>배터리 시작 (%)</label><input type="number" id="bs-${i}" min="0" max="100" value="${d.bs!==undefined?d.bs:''}" placeholder="95" oninput="updateCalc(${i})"></div>
-        <div class="field"><label>배터리 종료 (%)</label><input type="number" id="be-${i}" min="0" max="100" value="${d.be!==undefined?d.be:''}" placeholder="72" oninput="updateCalc(${i})"></div>
-      </div>
-      <div class="calc-row">
-        <div class="stat-pill">착용시간 <span id="h-${i}">${hours!==null?hours+'h':'--'}</span></div>
-        <div class="stat-pill">방전율 <span id="dr-${i}">${dr!==null?dr+'%':'--'}</span></div>
-      </div>`;
+      <div id="sessions-${i}">${sessionsHTML}</div>
+      <button class="add-session-btn" onclick="addSession(${i})">+ 세션 추가</button>
+    `;
     wrap.appendChild(card);
   }
 }
 
-function updateCalc(i){
-  const s=document.getElementById(`s-${i}`).value;
-  const e=document.getElementById(`e-${i}`).value;
-  const bs=document.getElementById(`bs-${i}`).value;
-  const be=document.getElementById(`be-${i}`).value;
-  const h=calcHours(s,e);
-  const dr=(bs!==''&&be!=='')?+(+bs-+be).toFixed(1):null;
-  document.getElementById(`h-${i}`).textContent=h!==null?h+'h':'--';
-  document.getElementById(`dr-${i}`).textContent=dr!==null?dr+'%':'--';
+function renderSessionHTML(i,si,s){
+  const h=calcHours(s.start,s.end);
+  const dr=(s.bs!==undefined&&s.be!==undefined&&s.bs!==''&&s.be!=='')?+(+s.bs-+s.be).toFixed(1):null;
+  return `
+    <div class="session" id="session-${i}-${si}">
+      <div class="session-num">세션 ${si+1}</div>
+      <div class="session-fields">
+        <div class="field"><label>착용 시작</label>
+          <input type="time" id="s-${i}-${si}" value="${s.start||''}" oninput="updateSessionCalc(${i},${si})"></div>
+        <div class="field"><label>착용 종료</label>
+          <input type="time" id="e-${i}-${si}" value="${s.end||''}" oninput="updateSessionCalc(${i},${si})"></div>
+        <div class="field"><label>배터리 시작 (%)</label>
+          <input type="number" id="bs-${i}-${si}" min="0" max="100" value="${s.bs!==undefined?s.bs:''}" placeholder="95" oninput="updateSessionCalc(${i},${si})"></div>
+        <div class="field"><label>배터리 종료 (%)</label>
+          <input type="number" id="be-${i}-${si}" min="0" max="100" value="${s.be!==undefined?s.be:''}" placeholder="72" oninput="updateSessionCalc(${i},${si})"></div>
+      </div>
+      <div class="session-calc">
+        <div class="stat-pill">착용 <span id="h-${i}-${si}">${h!==null?h+'h':'--'}</span></div>
+        <div class="stat-pill">방전 <span id="dr-${i}-${si}">${dr!==null?dr+'%':'--'}</span></div>
+        <button class="del-btn" onclick="deleteSession(${i},${si})" title="세션 삭제">✕</button>
+      </div>
+    </div>`;
 }
 
-function saveNames(){localStorage.setItem('htnames',JSON.stringify(deviceNames));}
+function updateSessionCalc(i,si){
+  const s=document.getElementById(`s-${i}-${si}`).value;
+  const e=document.getElementById(`e-${i}-${si}`).value;
+  const bs=document.getElementById(`bs-${i}-${si}`).value;
+  const be=document.getElementById(`be-${i}-${si}`).value;
+  const h=calcHours(s,e);
+  const dr=(bs!==''&&be!=='')?+(+bs-+be).toFixed(1):null;
+  document.getElementById(`h-${i}-${si}`).textContent=h!==null?h+'h':'--';
+  document.getElementById(`dr-${i}-${si}`).textContent=dr!==null?dr+'%':'--';
+  updateDeviceTotal(i);
+}
+
+function updateDeviceTotal(i){
+  const key=dateKey(currentDate);
+  const sessions=collectSessions(i);
+  const totH=totalHours(sessions);
+  const totDr=totalDischarge(sessions);
+  document.getElementById(`tot-h-${i}`).textContent=totH!==null?totH+'h':'--';
+  document.getElementById(`tot-dr-${i}`).textContent=totDr!==null?totDr+'%':'--';
+}
+
+function collectSessions(i){
+  const container=document.getElementById(`sessions-${i}`);
+  const sessionEls=container.querySelectorAll('.session');
+  const sessions=[];
+  sessionEls.forEach((el,si)=>{
+    const start=document.getElementById(`s-${i}-${si}`)?.value||'';
+    const end=document.getElementById(`e-${i}-${si}`)?.value||'';
+    const bs=document.getElementById(`bs-${i}-${si}`)?.value;
+    const be=document.getElementById(`be-${i}-${si}`)?.value;
+    sessions.push({start,end,bs:bs!==''&&bs!==undefined?+bs:undefined,be:be!==''&&be!==undefined?+be:undefined});
+  });
+  return sessions;
+}
+
+function addSession(i){
+  const key=dateKey(currentDate);
+  if(!records[key])records[key]={};
+  if(!records[key][i])records[key][i]={sessions:[{}]};
+  const sessions=collectSessions(i);
+  sessions.push({});
+  records[key][i].sessions=sessions;
+  localStorage.setItem('htracker2',JSON.stringify(records));
+  const container=document.getElementById(`sessions-${i}`);
+  const si=sessions.length-1;
+  container.insertAdjacentHTML('beforeend',renderSessionHTML(i,si,{}));
+}
+
+function deleteSession(i,si){
+  const sessions=collectSessions(i);
+  if(sessions.length<=1){showToast('최소 1개 세션은 있어야 해요');return;}
+  sessions.splice(si,1);
+  const key=dateKey(currentDate);
+  if(!records[key])records[key]={};
+  records[key][i]={sessions};
+  localStorage.setItem('htracker2',JSON.stringify(records));
+  const container=document.getElementById(`sessions-${i}`);
+  container.innerHTML=sessions.map((s,idx)=>renderSessionHTML(i,idx,s)).join('');
+  updateDeviceTotal(i);
+}
+
+function saveNames(){localStorage.setItem('htnames2',JSON.stringify(deviceNames));}
 
 function saveDay(){
   const key=dateKey(currentDate);
-  records[key]={};
+  if(!records[key])records[key]={};
   for(let i=0;i<DC;i++){
     deviceNames[i]=document.getElementById(`dn-${i}`).value||deviceNames[i];
-    records[key][i]={
-      start:document.getElementById(`s-${i}`).value,
-      end:document.getElementById(`e-${i}`).value,
-      bs:document.getElementById(`bs-${i}`).value!==''?+document.getElementById(`bs-${i}`).value:undefined,
-      be:document.getElementById(`be-${i}`).value!==''?+document.getElementById(`be-${i}`).value:undefined,
-    };
+    records[key][i]={sessions:collectSessions(i)};
   }
-  localStorage.setItem('htracker',JSON.stringify(records));
+  localStorage.setItem('htracker2',JSON.stringify(records));
   saveNames();
   renderSummary();
   renderHistory();
@@ -184,10 +287,12 @@ function renderSummary(){
   for(let i=0;i<DC;i++){
     let totH=0,days=0,totDr=0,drDays=0;
     Object.values(records).forEach(rec=>{
-      const d=rec[i]||{};
-      const h=calcHours(d.start,d.end);
+      const d=rec[i];
+      if(!d||!d.sessions)return;
+      const h=totalHours(d.sessions);
+      const dr=totalDischarge(d.sessions);
       if(h){totH+=h;days++;}
-      if(d.bs!==undefined&&d.be!==undefined){totDr+=(d.bs-d.be);drDays++;}
+      if(dr!==null){totDr+=dr;drDays++;}
     });
     const avgH=days?+(totH/days).toFixed(1):0;
     const avgDr=drDays?+(totDr/drDays).toFixed(1):0;
@@ -202,39 +307,47 @@ function renderSummary(){
 }
 
 function renderHistory(){
-  document.getElementById('hist-head').innerHTML=`<th>날짜</th>`+deviceNames.map(n=>`<th>${n} 착용</th><th>방전율</th>`).join('');
+  document.getElementById('hist-head').innerHTML=`<th>날짜</th>`+
+    deviceNames.map(n=>`<th>${n}<br>착용(h)</th><th>방전(%)</th><th>세션수</th>`).join('');
   const keys=Object.keys(records).sort().reverse().slice(0,14);
   document.getElementById('hist-body').innerHTML=keys.map(key=>{
     const rec=records[key]||{};
     const cells=Array.from({length:DC},(_,i)=>{
-      const d=rec[i]||{};
-      const h=calcHours(d.start,d.end);
-      const dr=(d.bs!==undefined&&d.be!==undefined)?+(d.bs-d.be).toFixed(1):null;
-      return `<td>${h?h+'h':'-'}</td><td>${dr!==null?dr+'%':'-'}</td>`;
+      const d=rec[i];
+      if(!d||!d.sessions)return`<td>-</td><td>-</td><td>-</td>`;
+      const h=totalHours(d.sessions);
+      const dr=totalDischarge(d.sessions);
+      const sc=d.sessions.filter(s=>s.start||s.bs!==undefined).length;
+      return`<td>${h!==null?h:'- '}</td><td>${dr!==null?dr+'%':'-'}</td><td>${sc}</td>`;
     }).join('');
-    return `<tr><td>${key}</td>${cells}</tr>`;
+    return`<tr><td>${key}</td>${cells}</tr>`;
   }).join('');
 }
 
 function downloadExcel(){
   saveDay();
   const wb=XLSX.utils.book_new();
-  const header=['날짜'];
-  deviceNames.forEach(n=>header.push(`${n} 시작`,`${n} 종료`,`${n} 착용(h)`,`${n} 배터리시작(%)`,`${n} 배터리종료(%)`,`${n} 방전율(%)`));
+  const header=['날짜','기기','세션','착용시작','착용종료','착용시간(h)','배터리시작(%)','배터리종료(%)','방전율(%)'];
   const rows=[header];
   Object.keys(records).sort().forEach(key=>{
     const rec=records[key];
-    const row=[key];
     for(let i=0;i<DC;i++){
-      const d=rec[i]||{};
-      const h=calcHours(d.start,d.end);
-      const dr=(d.bs!==undefined&&d.be!==undefined)?+(d.bs-d.be).toFixed(1):null;
-      row.push(d.start||'',d.end||'',h||'',d.bs!==undefined?d.bs:'',d.be!==undefined?d.be:'',dr!==null?dr:'');
+      const d=rec[i];
+      if(!d||!d.sessions)return;
+      d.sessions.forEach((s,si)=>{
+        const h=calcHours(s.start,s.end);
+        const dr=(s.bs!==undefined&&s.be!==undefined)?+(+s.bs-+s.be).toFixed(1):null;
+        rows.push([key,deviceNames[i],`세션 ${si+1}`,s.start||'',s.end||'',h||'',
+          s.bs!==undefined?s.bs:'',s.be!==undefined?s.be:'',dr!==null?dr:'']);
+      });
+      const totH=totalHours(d.sessions);
+      const totDr=totalDischarge(d.sessions);
+      rows.push([key,deviceNames[i],'합계','','',totH||'','','',totDr!==null?totDr:'']);
+      rows.push([]);
     }
-    rows.push(row);
   });
   const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:12},...Array(DC*6).fill({wch:14})];
+  ws['!cols']=[{wch:12},{wch:10},{wch:8},{wch:10},{wch:10},{wch:12},{wch:14},{wch:14},{wch:10}];
   XLSX.utils.book_append_sheet(wb,ws,'착용기록');
   XLSX.writeFile(wb,'건강보조기기_착용기록.xlsx');
 }
