@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>건강보조기기 착용 기록</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1d1d1f;min-height:100vh;}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 40px;}
+h1{font-size:20px;font-weight:600;margin-bottom:4px;color:#1d1d1f;}
+.subtitle{font-size:13px;color:#888;margin-bottom:20px;}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+.date-nav{display:flex;align-items:center;gap:8px;}
+.date-nav button{background:#fff;border:1px solid #ddd;border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;color:#1d1d1f;}
+.date-nav button:hover{background:#f0f0f0;}
+#cur-date{font-size:14px;font-weight:500;min-width:180px;text-align:center;color:#1d1d1f;}
+.device-card{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:16px;margin-bottom:12px;}
+.device-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.device-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.device-name-input{font-size:15px;font-weight:600;color:#1d1d1f;background:transparent;border:none;border-bottom:1.5px solid #ddd;outline:none;width:160px;padding:2px 4px;}
+.device-name-input:focus{border-bottom-color:#7F77DD;}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(min-width:500px){.fields{grid-template-columns:1fr 1fr 1fr 1fr;}}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:11px;color:#888;font-weight:500;}
+.field input{font-size:13px;padding:7px 9px;border:1px solid #ddd;border-radius:8px;background:#fafafa;color:#1d1d1f;width:100%;}
+.field input:focus{outline:none;border-color:#7F77DD;background:#fff;}
+.calc-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.stat-pill{background:#f5f5f7;border-radius:8px;padding:6px 12px;font-size:12px;color:#888;}
+.stat-pill span{font-weight:600;color:#1d1d1f;}
+.actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.btn{background:#fff;border:1px solid #ddd;border-radius:10px;padding:8px 18px;font-size:13px;cursor:pointer;color:#1d1d1f;font-weight:500;}
+.btn:hover{background:#f0f0f0;}
+.btn-primary{background:#7F77DD;color:#fff;border-color:#7F77DD;}
+.btn-primary:hover{background:#6a62c4;}
+.section{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:16px;margin-top:16px;}
+.section h3{font-size:13px;font-weight:600;color:#888;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.sum-card{background:#f5f5f7;border-radius:10px;padding:12px;text-align:center;}
+.sum-card .name{font-size:11px;font-weight:600;margin-bottom:6px;}
+.sum-card .val{font-size:20px;font-weight:700;color:#1d1d1f;}
+.sum-card .sub{font-size:11px;color:#888;margin-top:2px;}
+.sum-card .val2{font-size:15px;font-weight:600;margin-top:6px;color:#1d1d1f;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:#f5f5f7;color:#888;padding:7px 6px;text-align:center;border-bottom:1px solid #e5e5e5;font-weight:600;}
+td{padding:7px 6px;text-align:center;border-bottom:1px solid #f0f0f0;color:#1d1d1f;}
+tr:last-child td{border-bottom:none;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1d1d1f;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>건강보조기기 착용 기록</h1>
+  <p class="subtitle">착용 시간과 배터리를 기록하고 패턴을 확인하세요</p>
+
+  <div class="top-bar">
+    <div class="date-nav">
+      <button onclick="changeDate(-1)">◀</button>
+      <span id="cur-date"></span>
+      <button onclick="changeDate(1)">▶</button>
+    </div>
+  </div>
+
+  <div id="devices-wrap"></div>
+
+  <div class="actions">
+    <button class="btn btn-primary" onclick="saveDay()">저장</button>
+    <button class="btn" onclick="downloadExcel()">엑셀 다운로드 ↓</button>
+  </div>
+
+  <div class="section">
+    <h3>전체 요약</h3>
+    <div class="sum-grid" id="sum-grid"></div>
+  </div>
+
+  <div class="section" style="margin-top:16px;">
+    <h3>최근 기록</h3>
+    <div style="overflow-x:auto;">
+      <table><thead><tr id="hist-head"></tr></thead><tbody id="hist-body"></tbody></table>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const COLORS=['#7F77DD','#1D9E75','#D85A30'];
+const DC=3;
+let currentDate=new Date();
+let records=JSON.parse(localStorage.getItem('htracker')||'{}');
+let deviceNames=JSON.parse(localStorage.getItem('htnames')||'["기기 1","기기 2","기기 3"]');
+
+function dateKey(d){return d.toISOString().slice(0,10);}
+function formatDate(d){return d.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'});}
+function calcHours(s,e){
+  if(!s||!e)return null;
+  const[sh,sm]=s.split(':').map(Number);
+  const[eh,em]=e.split(':').map(Number);
+  let m=(eh*60+em)-(sh*60+sm);
+  if(m<0)m+=1440;
+  return+(m/60).toFixed(2);
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function renderDevices(){
+  const key=dateKey(currentDate);
+  const rec=records[key]||{};
+  document.getElementById('cur-date').textContent=formatDate(currentDate);
+  const wrap=document.getElementById('devices-wrap');
+  wrap.innerHTML='';
+  for(let i=0;i<DC;i++){
+    const d=rec[i]||{};
+    const hours=calcHours(d.start,d.end);
+    const dr=(d.bs!==undefined&&d.be!==undefined&&d.bs!==''&&d.be!=='')?+(d.bs-d.be).toFixed(1):null;
+    const card=document.createElement('div');
+    card.className='device-card';
+    card.innerHTML=`
+      <div class="device-header">
+        <div class="device-dot" style="background:${COLORS[i]}"></div>
+        <input class="device-name-input" id="dn-${i}" value="${deviceNames[i]}" placeholder="기기 이름" onchange="deviceNames[${i}]=this.value;saveNames();renderSummary();renderHistory();">
+      </div>
+      <div class="fields">
+        <div class="field"><label>착용 시작</label><input type="time" id="s-${i}" value="${d.start||''}" oninput="updateCalc(${i})"></div>
+        <div class="field"><label>착용 종료</label><input type="time" id="e-${i}" value="${d.end||''}" oninput="updateCalc(${i})"></div>
+        <div class="field"><label>배터리 시작 (%)</label><input type="number" id="bs-${i}" min="0" max="100" value="${d.bs!==undefined?d.bs:''}" placeholder="95" oninput="updateCalc(${i})"></div>
+        <div class="field"><label>배터리 종료 (%)</label><input type="number" id="be-${i}" min="0" max="100" value="${d.be!==undefined?d.be:''}" placeholder="72" oninput="updateCalc(${i})"></div>
+      </div>
+      <div class="calc-row">
+        <div class="stat-pill">착용시간 <span id="h-${i}">${hours!==null?hours+'h':'--'}</span></div>
+        <div class="stat-pill">방전율 <span id="dr-${i}">${dr!==null?dr+'%':'--'}</span></div>
+      </div>`;
+    wrap.appendChild(card);
+  }
+}
+
+function updateCalc(i){
+  const s=document.getElementById(`s-${i}`).value;
+  const e=document.getElementById(`e-${i}`).value;
+  const bs=document.getElementById(`bs-${i}`).value;
+  const be=document.getElementById(`be-${i}`).value;
+  const h=calcHours(s,e);
+  const dr=(bs!==''&&be!=='')?+(+bs-+be).toFixed(1):null;
+  document.getElementById(`h-${i}`).textContent=h!==null?h+'h':'--';
+  document.getElementById(`dr-${i}`).textContent=dr!==null?dr+'%':'--';
+}
+
+function saveNames(){localStorage.setItem('htnames',JSON.stringify(deviceNames));}
+
+function saveDay(){
+  const key=dateKey(currentDate);
+  records[key]={};
+  for(let i=0;i<DC;i++){
+    deviceNames[i]=document.getElementById(`dn-${i}`).value||deviceNames[i];
+    records[key][i]={
+      start:document.getElementById(`s-${i}`).value,
+      end:document.getElementById(`e-${i}`).value,
+      bs:document.getElementById(`bs-${i}`).value!==''?+document.getElementById(`bs-${i}`).value:undefined,
+      be:document.getElementById(`be-${i}`).value!==''?+document.getElementById(`be-${i}`).value:undefined,
+    };
+  }
+  localStorage.setItem('htracker',JSON.stringify(records));
+  saveNames();
+  renderSummary();
+  renderHistory();
+  showToast('저장됐어요 ✓');
+}
+
+function changeDate(d){
+  saveDay();
+  currentDate=new Date(currentDate);
+  currentDate.setDate(currentDate.getDate()+d);
+  renderDevices();
+}
+
+function renderSummary(){
+  const grid=document.getElementById('sum-grid');
+  grid.innerHTML='';
+  for(let i=0;i<DC;i++){
+    let totH=0,days=0,totDr=0,drDays=0;
+    Object.values(records).forEach(rec=>{
+      const d=rec[i]||{};
+      const h=calcHours(d.start,d.end);
+      if(h){totH+=h;days++;}
+      if(d.bs!==undefined&&d.be!==undefined){totDr+=(d.bs-d.be);drDays++;}
+    });
+    const avgH=days?+(totH/days).toFixed(1):0;
+    const avgDr=drDays?+(totDr/drDays).toFixed(1):0;
+    grid.innerHTML+=`<div class="sum-card">
+      <div class="name" style="color:${COLORS[i]}">${deviceNames[i]}</div>
+      <div class="val">${totH.toFixed(1)}h</div>
+      <div class="sub">총 착용 · 일평균 ${avgH}h</div>
+      <div class="val2">${avgDr}%</div>
+      <div class="sub">평균 방전율</div>
+    </div>`;
+  }
+}
+
+function renderHistory(){
+  document.getElementById('hist-head').innerHTML=`<th>날짜</th>`+deviceNames.map(n=>`<th>${n} 착용</th><th>방전율</th>`).join('');
+  const keys=Object.keys(records).sort().reverse().slice(0,14);
+  document.getElementById('hist-body').innerHTML=keys.map(key=>{
+    const rec=records[key]||{};
+    const cells=Array.from({length:DC},(_,i)=>{
+      const d=rec[i]||{};
+      const h=calcHours(d.start,d.end);
+      const dr=(d.bs!==undefined&&d.be!==undefined)?+(d.bs-d.be).toFixed(1):null;
+      return `<td>${h?h+'h':'-'}</td><td>${dr!==null?dr+'%':'-'}</td>`;
+    }).join('');
+    return `<tr><td>${key}</td>${cells}</tr>`;
+  }).join('');
+}
+
+function downloadExcel(){
+  saveDay();
+  const wb=XLSX.utils.book_new();
+  const header=['날짜'];
+  deviceNames.forEach(n=>header.push(`${n} 시작`,`${n} 종료`,`${n} 착용(h)`,`${n} 배터리시작(%)`,`${n} 배터리종료(%)`,`${n} 방전율(%)`));
+  const rows=[header];
+  Object.keys(records).sort().forEach(key=>{
+    const rec=records[key];
+    const row=[key];
+    for(let i=0;i<DC;i++){
+      const d=rec[i]||{};
+      const h=calcHours(d.start,d.end);
+      const dr=(d.bs!==undefined&&d.be!==undefined)?+(d.bs-d.be).toFixed(1):null;
+      row.push(d.start||'',d.end||'',h||'',d.bs!==undefined?d.bs:'',d.be!==undefined?d.be:'',dr!==null?dr:'');
+    }
+    rows.push(row);
+  });
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:12},...Array(DC*6).fill({wch:14})];
+  XLSX.utils.book_append_sheet(wb,ws,'착용기록');
+  XLSX.writeFile(wb,'건강보조기기_착용기록.xlsx');
+}
+
+renderDevices();
+renderSummary();
+renderHistory();
+</script>
+</body>
+</html>
